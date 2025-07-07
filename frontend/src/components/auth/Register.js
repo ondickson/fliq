@@ -1,7 +1,8 @@
 // src/components/auth/Register.js
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from '../../api/axios';
+import './Register.css';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -11,17 +12,32 @@ const Register = () => {
     password: '',
     confirmPassword: '',
   });
-
+  const [focusedInput, setFocusedInput] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [previewUrl, setPreviewUrl] = useState(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleFileChange = (e) => {
-    setProfilePicture(e.target.files[0]);
+    const file = e.target.files[0];
+    setProfilePicture(file);
+
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -29,7 +45,7 @@ const Register = () => {
 
     // Frontend validation
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      setError('Passwords do not match');
       return;
     }
 
@@ -57,62 +73,112 @@ const Register = () => {
 
   return (
     <div className="auth-container">
-      <h2>Create Account</h2>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <input
-          type="text"
-          name="fullName"
-          placeholder="Full Name"
-          value={formData.fullName}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email Address"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="phone"
-          placeholder="Phone Number"
-          value={formData.phone}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Create Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirm Password"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="file"
-          name="profilePicture"
-          accept="image/png, image/jpeg"
-          onChange={handleFileChange}
-        />
+      <div className="left">nothing here for now</div>
+      <div className="right">
+        <div className="right-form-card">
+          <h2>Sign up</h2>
+          <form onSubmit={handleSubmit} encType="multipart/form-data">
+            <label className="label">Full Name</label>
+            <input
+              type="text"
+              name="fullName"
+              placeholder={focusedInput === 'fullName' ? '' : 'John Doe'}
+              value={formData.fullName}
+              onChange={handleChange}
+              onFocus={() => setFocusedInput('fullName')}
+              onBlur={() => setFocusedInput(null)}
+              required
+            />
 
-        {error && <p className="error-message">{error}</p>}
+            <label className="label">Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder={focusedInput === 'email' ? '' : 'example@mail.com'}
+              value={formData.email}
+              onChange={handleChange}
+              onFocus={() => setFocusedInput('email')}
+              onBlur={() => setFocusedInput(null)}
+              required
+            />
 
-        <button type="submit">Register</button>
-      </form>
-      <p>
-        Already have an account? <Link to="/login">Login</Link>
-      </p>
+            <label className="label">Mobile Number</label>
+            <input
+              type="text"
+              name="phone"
+              placeholder={focusedInput === 'phone' ? '' : '+1 (123) 456-7890'}
+              value={formData.phone}
+              onChange={handleChange}
+              onFocus={() => setFocusedInput('phone')}
+              onBlur={() => setFocusedInput(null)}
+              required
+            />
+
+            <div className="password">
+              <div className="password-left password-container">
+                <label className="label">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder={focusedInput === 'password' ? '' : '**********'}
+                  value={formData.password}
+                  onChange={handleChange}
+                  onFocus={() => setFocusedInput('password')}
+                  onBlur={() => setFocusedInput(null)}
+                  required
+                />
+              </div>
+
+              <div className="password-right password-container">
+                <label className="label">Confirm Password</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  placeholder={
+                    focusedInput === 'confirmPassword' ? '' : '**********'
+                  }
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  onFocus={() => setFocusedInput('confirmPassword')}
+                  onBlur={() => setFocusedInput(null)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="file-upload">
+              <label htmlFor="profilePicture" className="file-label">
+                Profile Picture
+              </label>
+              <input
+                id="profilePicture"
+                type="file"
+                name="profilePicture"
+                accept="image/png, image/jpeg"
+                onChange={handleFileChange}
+                className="file-input"
+              />
+              {previewUrl && (
+                <div className="image-preview">
+                  <img src={previewUrl} alt="Profile Preview" />
+                </div>
+              )}
+            </div>
+
+            {error && <p className="error-message">{error}</p>}
+
+            <button type="submit" class="create-account">
+              Create Account
+            </button>
+          </form>
+          <div class="divider">
+            <span>Or</span>
+          </div>
+          <button className="login" onClick={() => navigate('/login')}>
+            Log in
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
