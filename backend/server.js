@@ -26,7 +26,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:3000', 'http://172.29.80.1:3000'],
+    origin: ['http://localhost:3001', 'http://172.29.80.1:3001'],
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -34,7 +34,7 @@ const io = new Server(server, {
 
 // === Middleware ===
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://172.29.80.1:3000'],
+  origin: ['http://localhost:3001', 'http://172.29.80.1:3001'],
   credentials: true,
 }));
 app.use(express.json());
@@ -53,14 +53,23 @@ app.use('/api/users', userRoutes);
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
-  socket.on('send_message', (data) => {
-    socket.to(data.room).emit('receive_message', data);
+  // Join room
+  socket.on('join_room', (room) => {
+    socket.join(room);
+    console.log(`User ${socket.id} joined room ${room}`);
   });
+
+  // Handle sending messages
+  socket.on('send_message', (data) => {
+  socket.broadcast.to(data.room).emit('receive_message', data);
+});
+
 
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
   });
 });
+
 
 // === MongoDB Connection ===
 mongoose.connect(process.env.MONGO_URI, {
