@@ -1,20 +1,40 @@
 // src/components/auth/Login.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from '../../api/axios';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+
 
 const Login = () => {
-  const [emailOrPhone, setEmailOrPhone] = useState('');
+  const { setCurrentUser } = useContext(AuthContext);
+  const [input, setInput] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+  
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    // Placeholder login logic
-    if (emailOrPhone && password) {
-      localStorage.setItem('token', 'dummy-token');
+const handleLogin = async (e) => {
+  e.preventDefault();
+
+  try {
+    const res = await axios.post(
+      '/api/auth/login',
+      { emailOrPhone: input, password },
+      { withCredentials: true }
+    );
+
+    if (res.status === 200) {
+      // fetch user info right after login
+      const userRes = await axios.get('/api/auth/me', { withCredentials: true });
+      setCurrentUser(userRes.data);
       navigate('/');
     }
-  };
+  } catch (err) {
+    setError(err.response?.data?.message || 'Login failed');
+  }
+};
+
 
   return (
     <div className="auth-container">
@@ -23,8 +43,8 @@ const Login = () => {
         <input
           type="text"
           placeholder="Email or Phone"
-          value={emailOrPhone}
-          onChange={(e) => setEmailOrPhone(e.target.value)}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
           required
         />
         <input
@@ -34,6 +54,9 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+
+        {error && <p className="error-message">{error}</p>}
+
         <button type="submit">Login</button>
       </form>
       <p>

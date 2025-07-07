@@ -1,21 +1,29 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const http = require('http');
-const { Server } = require('socket.io');
-const cookieParser = require('cookie-parser');
-const path = require('path');
+// backend/server.js
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import http from 'http';
+import { Server } from 'socket.io';
+import cookieParser from 'cookie-parser';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 
+import authRoutes from './routes/authRoutes.js';
 
+// === ESM-compatible __dirname ===
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// === Load env variables ===
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'http://172.29.80.1:3000',
+    origin: ['http://localhost:3000', 'http://172.29.80.1:3000'],
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -23,16 +31,19 @@ const io = new Server(server, {
 
 // === Middleware ===
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: ['http://localhost:3000', 'http://172.29.80.1:3000'],
   credentials: true,
 }));
 app.use(express.json());
 app.use(cookieParser());
 
+// === Static files ===
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // === Basic Route ===
 app.get('/', (req, res) => res.send('Fliq backend is running'));
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/api/auth', authRoutes);
 
 // === Socket.IO ===
 io.on('connection', (socket) => {

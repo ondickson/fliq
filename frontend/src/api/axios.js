@@ -1,8 +1,13 @@
 // frontend/src/api/axios.js
 import axios from 'axios';
 
+const baseURL =
+  window.location.hostname === 'localhost'
+    ? 'http://localhost:5000'
+    : 'http://172.29.80.1:5000';
+
 const instance = axios.create({
-  baseURL: 'http://172.29.80.1:5000',
+  baseURL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
