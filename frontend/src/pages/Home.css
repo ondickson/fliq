@@ -1,0 +1,10 @@
+.home-container {
+  display: flex;
+  height: 100vh;
+}
+
+.chat-area {
+  flex: 1;
+  padding: 20px;
+  background-color: #fff;
+}

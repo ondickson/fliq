@@ -11,6 +11,9 @@ import { fileURLToPath } from 'url';
 
 
 import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+
+
 
 // === ESM-compatible __dirname ===
 const __filename = fileURLToPath(import.meta.url);
@@ -44,6 +47,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.get('/', (req, res) => res.send('Fliq backend is running'));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 // === Socket.IO ===
 io.on('connection', (socket) => {
