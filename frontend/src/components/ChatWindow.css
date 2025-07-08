@@ -1,68 +1,195 @@
+/* src/components/ChatWindow.css */
 .chat-window {
+  font-family: 'Lexend', sans-serif;
   flex: 1;
   display: flex;
   flex-direction: column;
+  background-size: cover;
+  background-position: center;
   height: 100vh;
-  border-left: 1px solid #ccc;
-  background-color: #fff;
+  /* padding: 1rem; */
 }
 
 .chat-header {
-  padding: 15px;
-  border-bottom: 1px solid #ccc;
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid #ddd;
+  padding: 1rem;
   background-color: #f9f9f9;
 }
 
-.chat-messages {
+.chat-header img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.chat-body {
   flex: 1;
-  padding: 15px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  padding: 1rem;
+  gap: 0.5rem;
 }
 
-.message {
-  padding: 10px 14px;
-  max-width: 60%;
-  border-radius: 20px;
+.chat-bubble {
+  width: 60%;
   font-size: 0.95rem;
+  padding: 0.8rem 1rem;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   line-height: 1.4;
+  transition: background-color 0.2s ease;
 }
 
-.message.sent {
+.sent {
   align-self: flex-end;
   background-color: #dcf8c6;
 }
 
-.message.received {
+.received {
   align-self: flex-start;
-  background-color: #eee;
+  background-color: #fff;
+  border: 1px solid #eee;
 }
 
-.chat-input {
+.chat-textarea {
+  background-color: rgb(143, 143, 143, 0.2);
+  width: 100%;
+  resize: none;
+  overflow-y: auto;
+  max-height: 8rem; 
+  overflow: hidden;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  line-height: 1.5;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.chat-window {
   display: flex;
-  border-top: 1px solid #ccc;
-  padding: 10px;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+}
+
+
+.chat-input {
+  margin: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-start !important;
+  gap: 1rem;
+  background-color: rgb(0, 191, 99, 0.05);
 }
 
 .chat-input input {
-  width: 90%;
+  background-color: rgb(143, 143, 143, 0.2);
+  border: none;
   flex: 1;
-  padding: 10px 16px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  margin-right: 10px;
+  padding: 0.75rem;
+  border-radius: 1px;
 }
 
-.chat-input .send-button {
-    width: 10%;
-  padding: 10px 16px;
-  background-color: #00bf63;
-  color: white;
+.send-button {
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 10px;
+  background-color: #00bf63;
+  color: #fff;
+  border-radius: 6px;
   cursor: pointer;
 }
+
+.send-button:hover {
+  transition: none;
+  transform: none;
+  box-shadow: none;
+}
+
+
+.chat-meta {
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 0.25rem;
+  text-align: right;
+}
+
+.chat-bubble {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.send-button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.emoji-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.emoji-picker {
+  position: absolute;
+  bottom: 60px;
+  right: 20px;
+  z-index: 100;
+}
+
+.typing-indicator {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #777;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+}
+
+.chat-placeholder {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+  /* background-color: rgba(255, 255, 255, 0.75); */
+}
+
+.chat-placeholder-box {
+  max-width: 400px;
+  padding: 2rem;
+  border-radius: 12px;
+  /* background: rgb(255, 255, 255, .5); */
+  /* box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); */
+  /* border: 1px solid #eee; */
+}
+
+.chat-placeholder-box img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.chat-placeholder-box h2 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.chat-placeholder-box p {
+  font-size: 1rem;
+  color: #777;
+}
+

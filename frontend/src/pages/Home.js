@@ -1,97 +1,77 @@
+// src/pages/Home.js
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import socket from '../socket';
+import Sidebar from '../components/Sidebar';
+import ChatWindow from '../components/ChatWindow';
+
+const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
 
 const Home = () => {
   const { currentUser, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const [selectedUser, setSelectedUser] = useState(null);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
 
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
+  useEffect(() => {
+    socket.connect();
+
+    socket.emit('register_user', currentUser._id);
+
+    const handleMessage = (data) => {
+      const { senderId, receiverId } = data;
+      if (
+        (senderId === selectedUser?._id && receiverId === currentUser._id) ||
+        (senderId === currentUser._id && receiverId === selectedUser?._id)
+      ) {
+        setMessages((prev) => [...prev, data]);
+      }
+    };
+
+    socket.on('receive_message', handleMessage);
+
+    return () => {
+      socket.off('receive_message', handleMessage);
+      socket.disconnect();
+    };
+  }, [selectedUser]);
+
+  const handleSendMessage = () => {
+    if (!message.trim() || !selectedUser) return;
+
+    const msgData = {
+      senderId: currentUser._id,
+      senderName: currentUser.fullName,
+      receiverId: selectedUser._id,
+      receiverName: selectedUser.fullName,
+      message,
+      createdAt: new Date().toISOString(),
+    };
+
+    socket.emit('private_message', msgData);
+    setMessages((prev) => [...prev, msgData]);
+    setMessage('');
   };
-
-useEffect(() => {
-  socket.connect();
-
-  const handleMessage = (data) => {
-    if (data.fromSocketId === socket.id) return;
-    setMessages((prev) => [...prev, data]);
-  };
-
-  socket.on('connect', () => {
-    console.log('Socket connected:', socket.id);
-    socket.emit('join_room', 'public');
-  });
-
-  socket.on('receive_message', handleMessage);
-
-  return () => {
-    socket.off('receive_message', handleMessage); // ✅ Proper cleanup
-    socket.disconnect(); // Optional: only if you want to fully close socket
-  };
-}, []);
-
-
-
-const handleSendMessage = () => {
-  if (!message.trim()) return;
-
-  const msgData = {
-    room: 'public',
-    message,
-    senderId: currentUser?._id,
-    senderName: currentUser?.fullName,
-    fromSocketId: socket.id,
-  };
-
-  // Emit to others
-  socket.emit('send_message', msgData);
-
-  // Add to own UI only once
-  setMessages((prev) => [...prev, msgData]);
-
-  setMessage('');
-};
-
 
   return (
-    <div style={{ padding: '1rem' }}>
-      <h2>Welcome, {currentUser?.fullName}</h2>
-      <button onClick={handleLogout}>Logout</button>
-
-      <div
-        style={{
-          marginTop: '2rem',
-          maxHeight: '300px',
-          overflowY: 'auto',
-          border: '1px solid #ccc',
-          padding: '1rem',
+    <div style={{ display: 'flex', height: '100vh' }}>
+      <Sidebar
+        onSelectUser={(user) => {
+          setSelectedUser(user);
+          setMessages([]);
         }}
-      >
-        {messages.map((msg, index) => (
-          <p key={index}>
-            <strong>{msg.senderName}:</strong> {msg.message}
-          </p>
-        ))}
-      </div>
-
-      <div style={{ marginTop: '1rem' }}>
-        <input
-          type="text"
-          placeholder="Type your message..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          style={{ padding: '0.5rem', width: '70%' }}
-        />
-        <button onClick={handleSendMessage} style={{ padding: '0.5rem' }}>
-          Send
-        </button>
-      </div>
+      />
+      <ChatWindow
+        selectedUser={selectedUser}
+        messages={messages}
+        message={message}
+        setMessage={setMessage}
+        handleSendMessage={handleSendMessage}
+        BASE_URL={BASE_URL}
+      />
     </div>
   );
 };

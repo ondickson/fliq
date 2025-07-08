@@ -8,3 +8,11 @@
   padding: 20px;
   background-color: #fff;
 }
+
+.home-container{
+  background-image: url('../../../public/ChatBackground.jpg');
+  background-repeat: no-repeat;
+  /* background-color: red; */
+  background-position: center center;
+  background-size: cover;
+}

@@ -76,7 +76,7 @@ form {
   /* max-width: 400px; */
 }
 
-input {
+.right-form-card input {
   font-family: 'lexend', sans-serif;
   padding: 15px 20px;
   margin-bottom: 15px;
