@@ -89,6 +89,7 @@ const Sidebar = ({ onSelectUser }) => {
             <div className="chat-info">
               <p className="chat-name">{user.fullName}</p>
               <p className="chat-preview">{user.email}</p>
+              
             </div>
           </div>
         ))}

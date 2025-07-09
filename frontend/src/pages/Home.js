@@ -106,8 +106,10 @@ const Home = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [message, setMessage] = useState('');
   const [messageCache, setMessageCache] = useState({});
+const [showSidebar, setShowSidebar] = useState(true);
 
   const messages = selectedUser ? messageCache[selectedUser._id] || [] : [];
+  
 
   useEffect(() => {
     socket.connect();
@@ -168,6 +170,9 @@ const Home = () => {
 
   const handleSelectUser = async (user) => {
     setSelectedUser(user);
+
+    if (window.innerWidth <= 768) setShowSidebar(false);
+    
     if (messageCache[user._id]) return;
 
     try {
@@ -178,18 +183,32 @@ const Home = () => {
     }
   };
 
+
+  const handleBackToSidebar = () => {
+  setSelectedUser(null);
+  setShowSidebar(true);
+};
+
+
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
-      <Sidebar onSelectUser={handleSelectUser} />
-      <ChatWindow
-        selectedUser={selectedUser}
-        messages={messages}
-        message={message}
-        setMessage={setMessage}
-        handleSendMessage={handleSendMessage}
-        BASE_URL={BASE_URL}
-      />
-    </div>
+    <div style={{ display: 'flex', height: '100vh', width: '100%' }}>
+  {(showSidebar || window.innerWidth > 768) && (
+    <Sidebar onSelectUser={handleSelectUser} />
+  )}
+
+  {(selectedUser || window.innerWidth > 768) && (
+    <ChatWindow
+      selectedUser={selectedUser}
+      messages={messages}
+      message={message}
+      setMessage={setMessage}
+      handleSendMessage={handleSendMessage}
+      BASE_URL={BASE_URL}
+      handleBack={handleBackToSidebar}
+    />
+  )}
+</div>
+
   );
 };
 

@@ -80,7 +80,7 @@
 
 
 .chat-input {
-  margin: 1rem;
+  margin: 0rem 1rem 1rem 1rem;
   display: flex;
   flex-direction: row;
   align-items: flex-end;
@@ -163,16 +163,12 @@
   align-items: center;
   padding: 2rem;
   text-align: center;
-  /* background-color: rgba(255, 255, 255, 0.75); */
 }
 
 .chat-placeholder-box {
   max-width: 400px;
   padding: 2rem;
   border-radius: 12px;
-  /* background: rgb(255, 255, 255, .5); */
-  /* box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); */
-  /* border: 1px solid #eee; */
 }
 
 .chat-placeholder-box img {
@@ -191,5 +187,29 @@
 .chat-placeholder-box p {
   font-size: 1rem;
   color: #777;
+}
+
+.back-button {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  background: none;
+  border: none;
+  color: #00bf63;
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .back-button {
+    display: block;
+  }
+
+  .chat-header {
+    padding-left: 4rem; /* Leave room for back button */
+  }
 }
 
