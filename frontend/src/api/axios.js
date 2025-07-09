@@ -4,7 +4,7 @@ import axios from 'axios';
 const baseURL =
   window.location.hostname === 'localhost'
     ? 'http://localhost:5000'
-    : 'http://172.29.80.1:5000';
+    : 'http://172.18.80.1:5000';
 
 const instance = axios.create({
   baseURL,
