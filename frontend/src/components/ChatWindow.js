@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import './ChatWindow.css';
-import Picker from '@emoji-mart/react';
-import data from '@emoji-mart/data';
+import EmojiPicker from 'emoji-picker-react';
+import CryptoJS from 'crypto-js';
+import { AuthContext } from '../context/AuthContext';
 
 const ChatWindow = ({
   selectedUser,
@@ -10,15 +11,14 @@ const ChatWindow = ({
   setMessage,
   handleSendMessage,
   BASE_URL,
-  // isTyping = { isTyping },
 }) => {
   const inputRef = useRef(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  // const [isTyping, setIsTyping] = useState(false);
+  const { currentUser } = useContext(AuthContext);
 
-  const addEmoji = (emoji) => {
-    setMessage((prev) => prev + emoji.native);
-  };
+  // const addEmoji = (emoji) => {
+  //   setMessage((prev) => prev + emoji.native);
+  // };
 
   useEffect(() => {
     if (inputRef.current) inputRef.current.focus();
@@ -40,7 +40,7 @@ const ChatWindow = ({
     const el = inputRef.current;
     if (!el) return;
 
-    el.style.height = 'auto'; // Reset height
+    el.style.height = 'auto';
     const scrollHeight = el.scrollHeight;
 
     const maxHeight = 128;
@@ -71,29 +71,32 @@ const ChatWindow = ({
           </div>
 
           <div className="chat-body">
-            {/* {console.log('messages:', messages)} */}
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`chat-bubble ${
-                  msg.senderId === selectedUser._id ? 'received' : 'sent'
-                }`}
-              >
-                {msg.message}
-                <div className="chat-meta">
-                  <span className="time">{formatTime(msg.createdAt)}</span>
-                </div>
-              </div>
-            ))}
+            {messages.map((msg, index) => {
+              let decrypted = '';
+              try {
+                const secretKey = msg.senderId + msg.receiverId;
+                decrypted = CryptoJS.AES.decrypt(
+                  msg.message,
+                  secretKey,
+                ).toString(CryptoJS.enc.Utf8);
+              } catch (err) {
+                decrypted = '[Unable to decrypt]';
+              }
 
-            {/* <div className="typing-indicator">
-                {selectedUser.fullName} is typing...
-              </div> */}
-            {/* {isTyping && (
-              <div className="typing-indicator">
-                {selectedUser.fullName} is typing...
-              </div>
-            )} */}
+              return (
+                <div
+                  key={index}
+                  className={`chat-bubble ${
+                    msg.senderId === selectedUser._id ? 'received' : 'sent'
+                  }`}
+                >
+                  {decrypted}
+                  <div className="chat-meta">
+                    <span className="time">{formatTime(msg.createdAt)}</span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
           <div className="chat-input">
@@ -105,15 +108,10 @@ const ChatWindow = ({
               😊
             </button>
             <textarea
-              // title="Press Enter to send"
               ref={inputRef}
-              // type="text"
               placeholder="Type a message..."
               value={message}
-              onChange={(e) => {
-                setMessage(e.target.value);
-                // setIsTyping(true);
-              }}
+              onChange={(e) => setMessage(e.target.value)}
               onKeyDown={handleKeyDown}
               rows={1}
               className="chat-textarea"
@@ -121,12 +119,16 @@ const ChatWindow = ({
 
             {showEmojiPicker && (
               <div className="emoji-picker">
-                <Picker data={data} onEmojiSelect={addEmoji} />
+                <EmojiPicker
+                  onEmojiClick={(emojiData) => {
+                    setMessage((prev) => prev + emojiData.emoji);
+                  }}
+                  theme="light"
+                />
               </div>
             )}
 
             <button
-              // disabled={!message.trim()}
               onClick={() => {
                 handleSendMessage();
                 if (inputRef.current) inputRef.current.focus();

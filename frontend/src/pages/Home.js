@@ -6,6 +6,7 @@ import socket from '../socket';
 import Sidebar from '../components/Sidebar';
 import ChatWindow from '../components/ChatWindow';
 import axios from '../api/axios';
+import CryptoJS from 'crypto-js';
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
 
@@ -19,9 +20,8 @@ const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
 //   // const [messages, setMessages] = useState([]);
 //   const messages = selectedUser ? messageCache[selectedUser._id] || [] : [];
 
-
 //   useEffect(() => {
-    
+
 //     socket.connect();
 
 //     socket.emit('register_user', currentUser._id);
@@ -36,7 +36,6 @@ const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
 //     [otherUserId]: [...(prev[otherUserId] || []), data],
 //   }));
 // };
-
 
 //     socket.on('receive_message', handleMessage);
 
@@ -60,7 +59,6 @@ const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
 //   }
 // };
 
-
 // const handleSendMessage = () => {
 //   if (!message.trim() || !selectedUser) return;
 
@@ -82,7 +80,6 @@ const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
 
 //   setMessage('');
 // };
-
 
 //   return (
 //     <div style={{ display: 'flex', height: '100vh' }}>
@@ -135,14 +132,27 @@ const Home = () => {
   }, [currentUser._id]);
 
   const handleSendMessage = () => {
+    const SECRET = currentUser._id + selectedUser._id;
+
+    const encrypted = CryptoJS.AES.encrypt(message, SECRET).toString();
+
     if (!message.trim() || !selectedUser) return;
+
+    // const msgData = {
+    //   senderId: currentUser._id,
+    //   senderName: currentUser.fullName,
+    //   receiverId: selectedUser._id,
+    //   receiverName: selectedUser.fullName,
+    //   message,
+    //   createdAt: new Date().toISOString(),
+    // };
 
     const msgData = {
       senderId: currentUser._id,
       senderName: currentUser.fullName,
       receiverId: selectedUser._id,
       receiverName: selectedUser.fullName,
-      message,
+      message: encrypted, // encrypted here!
       createdAt: new Date().toISOString(),
     };
 
@@ -182,6 +192,5 @@ const Home = () => {
     </div>
   );
 };
-
 
 export default Home;
