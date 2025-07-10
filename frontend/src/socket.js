@@ -1,6 +1,8 @@
+// frontend/src/socket.js
+
 import { io } from 'socket.io-client';
 
-const socket = io('https://fliq-frontend.onrender.com', {
+const socket = io('https://fliq-backend.onrender.com', {
   withCredentials: true,
 });
 

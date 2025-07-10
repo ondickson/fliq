@@ -43,6 +43,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+
 // === Static files ===
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
