@@ -9,7 +9,8 @@ const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
 // console.log('BASE_URL:', BASE_URL);
 
 const Sidebar = ({ onSelectUser }) => {
-  const { currentUser, logout } = useContext(AuthContext);
+  // const { currentUser, logout } = useContext(AuthContext);
+  const { logout } = useContext(AuthContext);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [allUsers, setAllUsers] = useState([]);

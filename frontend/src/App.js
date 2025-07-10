@@ -17,8 +17,9 @@ function ProtectedRoute({ children }) {
 }
 
 function AppContent() {
-  const { currentUser } = useContext(AuthContext);
-  const [allMessages, setAllMessages] = useState([]);
+  // const { currentUser } = useContext(AuthContext);
+  // const [allMessages, setAllMessages] = useState([]);
+  const [allMessages] = useState([]);
 
 // App.js or InnerApp.js
 useEffect(() => {

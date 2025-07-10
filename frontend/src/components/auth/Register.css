@@ -1,4 +1,4 @@
-* {
+/* * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -73,7 +73,6 @@ form {
   display: flex;
   flex-direction: column;
   width: 100%;
-  /* max-width: 400px; */
 }
 
 .right-form-card input {
@@ -135,9 +134,9 @@ button:hover {
 .loginButton {
   width: 100%;
   padding: 15px;
-  background-color: rgb(0, 200, 83); /* Green */
+  background-color: rgb(0, 200, 83); 
   color: white;
-  /* font-weight: bold; */
+
   border: none;
   border-radius: 999px;
   cursor: pointer;
@@ -150,7 +149,7 @@ button:hover {
   align-items: center;
   text-align: center;
   color: gray;
-  /* font-weight: 500; */
+
   font-size: 14px;
   margin-bottom: 20px;
 }
@@ -169,7 +168,7 @@ button:hover {
   padding: 15px;
   background-color: rgba(0, 200, 83, 0.2);
   color: #222;
-  /* font-weight: 500; */
+
   border: none;
   border-radius: 999px;
   cursor: pointer;
@@ -179,7 +178,7 @@ button:hover {
 .file-upload {
   display: flex;
   flex-direction: column;
-  /* margin-bottom: 20px; */
+
 }
 
 .file-label {
@@ -211,7 +210,6 @@ button:hover {
   border-radius: 50%;
   border: 2px solid rgba(143, 143, 143, 0.2);
 
-  /* Animation */
   opacity: 0;
   transform: scale(0.9);
   animation: fadeInZoom 0.4s ease forwards;
@@ -221,5 +219,264 @@ button:hover {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+} */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.auth-container {
+  background-color: #f5f5f5;
+  font-family: 'Lexend', sans-serif;
+  background-image: url('../../../public/Login Background.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.left {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.right {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.right-form-card {
+  width: 60%;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.right-form-card h2 {
+  font-family: 'League Spartan', sans-serif;
+  font-size: 2.5em;
+  margin-bottom: 1rem;
+  color: #00bf63;
+}
+
+.password {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 4%;
+}
+
+.password-container {
+  width: 48%;
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  margin-bottom: 0.4em;
+  color: #282828;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.right-form-card input {
+  font-family: 'lexend', sans-serif;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  border-radius: 20px;
+  background-color: rgba(143, 143, 143, 0.2);
+  border: none;
+  font-size: 14px;
+}
+
+input::placeholder {
+  font-style: italic;
+}
+
+input:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
+button {
+  font-family: 'Lexend', sans-serif;
+  padding: 10px;
+  background-color: #00bf63;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.1);
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.right p {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.auth-buttons {
+  width: 90%;
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.create-account,
+.loginButton {
+  width: 100%;
+  padding: 15px;
+  background-color: rgb(0, 200, 83);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: gray;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #ccc;
+  margin: 0 10px;
+}
+
+.login {
+  width: 100%;
+  padding: 15px;
+  background-color: rgba(0, 200, 83, 0.2);
+  color: #222;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.file-upload {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-label {
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #282828;
+  font-size: 14px;
+}
+
+.file-input {
+  padding: 12px 20px;
+  font-family: 'Lexend', sans-serif;
+  background-color: rgba(143, 143, 143, 0.2);
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.image-preview {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.image-preview img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid rgba(143, 143, 143, 0.2);
+  opacity: 0;
+  transform: scale(0.9);
+  animation: fadeInZoom 0.4s ease forwards;
+}
+
+@keyframes fadeInZoom {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ✅ MOBILE FRIENDLY LAYOUT */
+@media screen and (max-width: 768px) {
+  .auth-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 1rem;
+    height: auto;
+    background-position: top center;
+  }
+
+  .left {
+    display: none;
+  }
+
+  .right {
+    width: 100%;
+  }
+
+  .right-form-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 1.5rem;
+    margin: auto;
+  }
+
+  .password {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .password-container {
+    width: 100%;
+  }
+
+  .create-account,
+  .loginButton,
+  .login {
+    font-size: 15px;
+    padding: 12px;
   }
 }

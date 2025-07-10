@@ -1,9 +1,9 @@
 // src/components/ChatWindow.js
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './ChatWindow.css';
 import EmojiPicker from 'emoji-picker-react';
 import CryptoJS from 'crypto-js';
-import { AuthContext } from '../context/AuthContext';
+// import { AuthContext } from '../context/AuthContext';
 
 const isMobile = window.innerWidth <= 768;
 
@@ -19,7 +19,7 @@ const ChatWindow = ({
   const inputRef = useRef(null);
   const chatBodyRef = useRef(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const { currentUser } = useContext(AuthContext);
+  // const { currentUser } = useContext(AuthContext);
 
   // focus input when user or messages change
   useEffect(() => {
