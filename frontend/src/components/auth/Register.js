@@ -17,6 +17,9 @@ const Register = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
+const [success, setSuccess] = useState('');
+
 
   useEffect(() => {
     return () => {
@@ -42,6 +45,9 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+  setSuccess('');
+  setLoading(true);
 
     // Frontend validation
     if (formData.password !== formData.confirmPassword) {
@@ -63,12 +69,15 @@ const Register = () => {
         withCredentials: true,
       });
 
-      if (res.status === 201) {
-        navigate('/login');
-      }
+      if (res.status === 201 || res.status === 200) {
+      setSuccess('Account created successfully!');
+      setTimeout(() => navigate('/login'), 2000);
+    }
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
-    }
+  } finally {
+    setLoading(false);
+  }
   };
 
   return (
@@ -165,7 +174,10 @@ const Register = () => {
               )}
             </div>
 
-            {error && <p className="error-message">{error}</p>}
+            {loading && <div className="spinner"></div>}
+{error && <p className="error-message">{error}</p>}
+{success && <p className="success-message">{success}</p>}
+
 
             <button type="submit" class="create-account">
               Create Account
