@@ -39,7 +39,7 @@ const Login = () => {
 
   return (
     <div className="auth-container">
-      <div className="left">Nothing here for now</div>
+      <div className="left">  New Commit to check Web Deployment</div>
       <div className="right">
         <div className="right-form-card login-card">
           <h2>Login</h2>
