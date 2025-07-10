@@ -29,39 +29,30 @@ const server = http.createServer(app);
 // === Middleware ===
 const allowedOrigins = ['https://fliq-frontend.onrender.com', 'http://localhost:3000'];
 
-app.use(cors({
-  origin: function(origin, callback) {
-    // allow requests with no origin like mobile apps or curl
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // Allow same-origin or curl/postman
+    if (process.env.NODE_ENV === 'development') return callback(null, true); // Allow all in dev
+    
+    const allowed = ['https://fliq-frontend.onrender.com'];
+    if (allowed.includes(origin)) return callback(null, true);
+
+    return callback(new Error('CORS Not Allowed'), false);
   },
   credentials: true,
-}));
+};
+
+app.use(cors(corsOptions));
+
 
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: process.env.NODE_ENV === 'development' ? true : ['https://fliq-frontend.onrender.com'],
     methods: ['GET', 'POST'],
     credentials: true,
   },
 });
 
-// app.use(cors({
-//   origin: function(origin, callback) {
-//     // allow requests with no origin like mobile apps or curl
-//     if (!origin) return callback(null, true);
-//     if (allowedOrigins.indexOf(origin) === -1) {
-//       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-//       return callback(new Error(msg), false);
-//     }
-//     return callback(null, true);
-//   },
-//   credentials: true,
-// }));
 
 
 app.use(express.json());
