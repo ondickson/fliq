@@ -55,9 +55,14 @@ const Register = () => {
     }
 
     const data = new FormData();
+
+    data.append('email', formData.email.toLowerCase());
+
     Object.keys(formData).forEach((key) => {
       data.append(key, formData[key]);
     });
+
+
     if (profilePicture) {
       data.append('profilePicture', profilePicture);
     }

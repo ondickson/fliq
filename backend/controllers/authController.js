@@ -9,6 +9,11 @@ const JWT_SECRET = process.env.JWT_SECRET
 
 
 export const register = async (req, res) => {
+  const normalizedEmail = email.toLowerCase();
+
+ // Check if user exists
+const existingEmail = await User.findOne({ email: normalizedEmail });
+
   try {
     const { fullName, email, phone, password, confirmPassword } = req.body;
 
@@ -39,7 +44,7 @@ export const register = async (req, res) => {
     // Save user
     const newUser = new User({
       fullName,
-      email,
+      email: normalizedEmail,
       phone,
       password: hashedPassword,
       profilePicture,
@@ -58,15 +63,22 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { emailOrPhone, password } = req.body;
+
+    const normalizedInput = emailOrPhone.includes('@')
+  ? emailOrPhone.toLowerCase()
+  : emailOrPhone;
+
+
     
     if (!emailOrPhone || !password) {
       return res.status(400).json({ message: 'Email/phone and password are required' });
     }
 
     // Find user by email or phone
-    const user = await User.findOne({
-      $or: [{ email: emailOrPhone }, { phone: emailOrPhone }]
-    });
+   const user = await User.findOne({
+  $or: [{ email: normalizedInput }, { phone: normalizedInput }]
+});
+
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });

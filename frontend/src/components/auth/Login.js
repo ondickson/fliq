@@ -18,9 +18,11 @@ const Login = () => {
     e.preventDefault();
 
     try {
+      const loginInput = input.includes('@') ? input.toLowerCase() : input;
+
       const res = await axios.post(
         '/api/auth/login',
-        { emailOrPhone: input, password },
+        { emailOrPhone: loginInput, password },
         { withCredentials: true },
       );
 
