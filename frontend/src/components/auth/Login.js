@@ -12,7 +12,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-    const [focusedInput, setFocusedInput] = useState(null);
+  const [focusedInput, setFocusedInput] = useState(null);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -39,12 +39,12 @@ const Login = () => {
 
   return (
     <div className="auth-container">
-      <div className="left">  New Commit to check Web Deployment</div>
+      <div className="left"> New Commit to check Web Deployment</div>
       <div className="right">
         <div className="right-form-card login-card">
           <h2>Login</h2>
           <form onSubmit={handleLogin}>
-             <label className="label">Email</label>
+            <label className="label">Email</label>
             <input
               type="text"
               placeholder={focusedInput === 'Email' ? '' : 'example@mail.com'}
@@ -54,7 +54,7 @@ const Login = () => {
               onBlur={() => setFocusedInput(null)}
               required
             />
-             <label className="label">Password</label>
+            <label className="label">Password</label>
             <input
               type="password"
               placeholder={focusedInput === 'Password' ? '' : '**********'}
