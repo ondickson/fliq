@@ -83,7 +83,7 @@ io.on('connection', (socket) => {
   // console.log('User connected:', socket.id);
   socket.on('register_user', (userId) => {
     userSocketMap[userId] = socket.id;
-    console.log(`User ${userId} registered with socket ID ${socket.id}`);
+    // console.log(`User ${userId} registered with socket ID ${socket.id}`);
   });
 
   socket.on('private_message', async (data) => {

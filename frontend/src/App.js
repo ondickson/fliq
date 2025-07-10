@@ -24,7 +24,7 @@ function AppContent() {
 // App.js or InnerApp.js
 useEffect(() => {
   socket.on('receive_message', (data) => {
-    console.log('Incoming message:', data);
+    // console.log('Incoming message:', data);
 
     // Save to localStorage or Context for now
     const stored = JSON.parse(localStorage.getItem('fliq_messages')) || [];
