@@ -27,7 +27,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:3000', 'http://172.18.80.1:3000'],
+    origin: ['http://localhost:3000', 'https://fliq-frontend.onrender.com'],
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -36,7 +36,7 @@ const io = new Server(server, {
 // === Middleware ===
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'http://172.18.80.1:3000'],
+    origin: ['http://localhost:3000', 'https://fliq-frontend.onrender.com'],
     credentials: true,
   }),
 );
