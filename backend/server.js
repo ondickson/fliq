@@ -30,15 +30,7 @@ const server = http.createServer(app);
 const allowedOrigins = ['https://fliq-frontend.onrender.com', 'http://localhost:3000'];
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // Allow same-origin or curl/postman
-    if (process.env.NODE_ENV === 'development') return callback(null, true); // Allow all in dev
-    
-    const allowed = ['https://fliq-frontend.onrender.com'];
-    if (allowed.includes(origin)) return callback(null, true);
-
-    return callback(new Error('CORS Not Allowed'), false);
-  },
+  origin: 'https://fliq-frontend.onrender.com',
   credentials: true,
 };
 
@@ -47,7 +39,7 @@ app.use(cors(corsOptions));
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.NODE_ENV === 'development' ? true : ['https://fliq-frontend.onrender.com'],
+    origin: 'https://fliq-frontend.onrender.com',
     methods: ['GET', 'POST'],
     credentials: true,
   },

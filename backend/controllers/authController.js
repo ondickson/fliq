@@ -5,17 +5,12 @@ import User from '../models/User.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET
-
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export const register = async (req, res) => {
-  const normalizedEmail = email.toLowerCase();
-
- // Check if user exists
-const existingEmail = await User.findOne({ email: normalizedEmail });
-
   try {
     const { fullName, email, phone, password, confirmPassword } = req.body;
+    const normalizedEmail = email.toLowerCase();
 
     // Validate required fields
     if (!fullName || !email || !phone || !password || !confirmPassword) {
@@ -28,18 +23,22 @@ const existingEmail = await User.findOne({ email: normalizedEmail });
     }
 
     // Check if user exists
-    const existingEmail = await User.findOne({ email });
+    const existingEmail = await User.findOne({ email: normalizedEmail });
     const existingPhone = await User.findOne({ phone });
 
     if (existingEmail || existingPhone) {
-      return res.status(409).json({ message: 'Email or phone number already in use' });
+      return res
+        .status(409)
+        .json({ message: 'Email or phone number already in use' });
     }
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Handle profile picture (optional)
-    const profilePicture = req.file ? `/uploads/profile_pictures/${req.file.filename}` : '';
+    const profilePicture = req.file
+      ? `/uploads/profile_pictures/${req.file.filename}`
+      : '';
 
     // Save user
     const newUser = new User({
@@ -59,26 +58,24 @@ const existingEmail = await User.findOne({ email: normalizedEmail });
   }
 };
 
-
 export const login = async (req, res) => {
   try {
     const { emailOrPhone, password } = req.body;
 
     const normalizedInput = emailOrPhone.includes('@')
-  ? emailOrPhone.toLowerCase()
-  : emailOrPhone;
+      ? emailOrPhone.toLowerCase()
+      : emailOrPhone;
 
-
-    
     if (!emailOrPhone || !password) {
-      return res.status(400).json({ message: 'Email/phone and password are required' });
+      return res
+        .status(400)
+        .json({ message: 'Email/phone and password are required' });
     }
 
     // Find user by email or phone
-   const user = await User.findOne({
-  $or: [{ email: normalizedInput }, { phone: normalizedInput }]
-});
-
+    const user = await User.findOne({
+      $or: [{ email: normalizedInput }, { phone: normalizedInput }],
+    });
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
@@ -100,8 +97,8 @@ export const login = async (req, res) => {
       httpOnly: true,
       sameSite: 'None',
       secure: true, // set to true in production when using HTTPS
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      // secure: process.env.NODE_ENV === 'production',
+      maxAge: 86400000, // 1 day
     });
 
     // console.log('Sending token cookie:', token);
@@ -113,11 +110,8 @@ export const login = async (req, res) => {
   }
 };
 
-
-
 export const getLoggedInUser = async (req, res) => {
   try {
-
     // console.log('Cookies:', req.cookies);
 
     const token = req.cookies.token;
